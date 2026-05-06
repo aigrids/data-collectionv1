@@ -11,8 +11,8 @@ from aidotgrids import load
 sys.path.append('src')
 import utils
 
-MAX_WORKERS = 64
-MAX_WORKERS_DOWNLOAD = 32
+MAX_WORKERS = 8
+MAX_WORKERS_DOWNLOAD = 2
 DATA_FRAC = 0.01
 MAP_TASK_TO_SAMPLE_SUBTASK = {
 	'OPFData': 'train_small_test_medium',
