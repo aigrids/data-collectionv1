@@ -24,6 +24,7 @@ Aryandoust, A. The AI.grids v1 collection of standardized machine learning tasks
 
 - Python version >= 3.12
 - CUDA
+- ~ 10 TB storage capacity (for all datasets)
 
 
 ## 1. Quick start
@@ -51,6 +52,11 @@ Install requirements:
 pip install -r requirements.txt
 ```
 
+Start a notebook:
+
+```bash
+python3.12 -m notebook
+```
 
 ## 2. Contributing
 

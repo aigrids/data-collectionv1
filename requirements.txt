@@ -1,3 +1,4 @@
 aidotgrids
 pyyaml
 mat73
+jupyter
