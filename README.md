@@ -29,7 +29,7 @@ Aryandoust, A. The AI.grids v1 collection of standardized machine learning tasks
 
 ## 1. Quick start
 
-Clone the repository
+Clone the repository:
 ```bash
 git clone https://github.com/aigrids/data-collectionv1
 
@@ -47,12 +47,16 @@ conda activate collectionv1-venv
 ```
 
 Install requirements:
-
 ```bash
 pip install -r requirements.txt
 ```
 
-Start a notebook:
+Install source code of repository in editbale mode. This makes src/** visible to notebooks and all other entry points, without having to change sys.path:
+```bash
+pip install -e .
+```
+
+Start Jupyter notebook:
 
 ```bash
 python3.12 -m notebook
