@@ -1,7 +1,6 @@
 import yaml
 
 
-
 def parse_config(path_to_config='config.yml'):
 	"""
 	"""

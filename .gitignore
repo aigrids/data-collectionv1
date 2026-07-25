@@ -3,3 +3,5 @@ notes.rtf
 notebooks
 .venv
 config_arsam.yml
+*main.ipynb
+*.egg-info/
