@@ -1,4 +1,4 @@
-# Contribution guidelines for PowerSystemData
+# Contribution guidelines for data-collectionv1
 
 ## Table of Contents
 - [Getting Started](#-getting-started)
@@ -15,12 +15,14 @@ All feature and personal development branches should originate from `main`.
 
 
 ## Getting Started
+
 To begin contributing:
+
 1. Clone the repository
 ```bash
-git clone https://<your_personal_access_token>@github.com/ArsamAryandoust/PowerSystemData
+git clone https://github.com/aigrids/data-collectionv1
 
-cd PowerSystemData
+cd data-collectionv1
 ```
 
 2. Create and switch to your personal development branch for making changes.
@@ -33,10 +35,15 @@ git checkout -b <your_personal_branch>
             ----------------<your_personal_branch>----------------
 ```
 
-3. Install required packages in virtual enviornment:
+3. Create virtual enviornment:
 ```bash
 python3.12 -m venv .venv
+
 source .venv/bin/activate 
+```
+
+4. Install required packages in virtual enviornment:
+```bash
 python -m pip install -r requirements.txt
 ```
 
@@ -44,7 +51,6 @@ python -m pip install -r requirements.txt
  ```bash
 python3 scripts/download.py
 ```
-
 
 ## Keeping Your Branch Up to Date
 
@@ -80,6 +86,7 @@ git push -u origin <your_personal_branch>
 
 
 ## Important Note on Rebasing
+
 * Allowed: Use git rebase locally to tidy up your commits before merging into a 
 shared branch.
 * Avoid: Rebasing commits that have already been pushed to the remote repository. 
