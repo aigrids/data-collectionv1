@@ -1,10 +1,5 @@
 # Contribution guidelines for data-collectionv1
 
-## Table of Contents
-- [Getting Started](#-getting-started)
-- [Keeping Your Branch Up to Date](#-keeping-your-branch-up-to-date)
-- [Important Note on Rebasing](#️-important-note-on-rebasing)
-
 We use a single long-lived branch for this project:
 
 ```cpp
