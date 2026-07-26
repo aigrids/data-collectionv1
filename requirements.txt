@@ -1,4 +1,5 @@
-aidotgrids
+aigrids
+pandas
 pyyaml
 mat73
 jupyter

@@ -1,8 +1,11 @@
+""" Contains functions used throughout repository, removing need for duplicates.
+
+"""
 import yaml
 
 
-def parse_config(path_to_config='config.yml'):
-	"""
+def parse_config(path_to_config):
+	""" Load configuration .yaml file as dictionary. 
 	"""
 
 	with open(path_to_config) as yaml_file:
