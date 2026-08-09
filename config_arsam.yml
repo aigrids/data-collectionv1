@@ -1,4 +1,5 @@
 root_path_datasets: "/hpcwork/p0027791/AI-grids"
+root_path_datasets_raw: "/hpcwork/p0027791/AI-grids-raw"
 list_avail_tasknames:
   - "OPFData"
   - "PowerGraph"
