@@ -62,6 +62,19 @@ Start Jupyter notebook:
 python3.12 -m notebook
 ```
 
+Run analysis for a specific task, for example for BuildingElectricity:
+```bash
+python3.12 scripts/analyse.py BE
+```
+
+Available arguments are:
+- BE (BuildingElectricity)
+- WF (WindFarm)
+- SC (SolarCube)
+- PG (PowerGraph)
+- OD (OPFData)
+
+
 ## 2. Contributing
 
 Project collaborators, please read [CONTRIBUTING.md](CONTRIBUTING.md) before 
