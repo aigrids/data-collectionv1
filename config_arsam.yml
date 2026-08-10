@@ -1,9 +1,11 @@
 root_path_datasets: "/hpcwork/p0027791/AI-grids"
 root_path_datasets_raw: "/hpcwork/p0027791/AI-grids-raw"
+root_path_results: 'results/'
 list_avail_tasknames:
   - "OPFData"
   - "PowerGraph"
   - "SolarCube"
   - "BuildingElectricity"
   - "WindFarm"
+
 
