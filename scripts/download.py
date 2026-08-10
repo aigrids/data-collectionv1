@@ -5,10 +5,8 @@ Example usage:
 	$ python scripts/download.py
 
 """
-import sys
 from aidotgrids import load
 
-sys.path.append('src')
 import utils
 
 MAX_WORKERS = 128
