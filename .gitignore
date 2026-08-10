@@ -1,7 +1,6 @@
 notes.rtf
 .DS_Store
 .venv
-config_arsam.yml
 *main.ipynb
 *.egg-info/
 *__pycache__
