@@ -62,18 +62,19 @@ Start Jupyter notebook:
 python3.12 -m notebook
 ```
 
-Run analysis for a specific task, for example for BuildingElectricity:
+Run analysis for a specific task, for example for BuildingElectricity. Before doing so, check the config.yml file and set for example `root_path_datasets` to a sufficiently large partition:
 ```bash
 python3.12 scripts/analyse.py BE
 ```
 
-Available arguments are:
+Available arguments for each task are:
 - BE (BuildingElectricity)
 - WF (WindFarm)
 - SC (SolarCube)
 - PG (PowerGraph)
 - OD (OPFData)
 
+This will save dataset characteristics analysis results in on the path `results/analysis/`
 
 ## 2. Contributing
 
