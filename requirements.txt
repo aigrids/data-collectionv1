@@ -3,3 +3,4 @@ pandas
 pyyaml
 mat73
 jupyter
+scikit-learn
