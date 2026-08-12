@@ -68,7 +68,7 @@ MAP_TASK_TO_AVAILSUBTASKS = {
 	'PowerGraph': [
 		'cascading_failure_binary',
 		'cascading_failure_multiclass',
-		'demand_not_served',
+		'demand_not_served_regression',
 		'cascading_failure_sequence'
 	],
 	'OPFData': [
