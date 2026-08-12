@@ -25,7 +25,7 @@ import count
 
 ARG = sys.argv[1]
 DATA_FRAC = 1
-PATH_CONFIG = 'config_arsam.yml'
+PATH_CONFIG = 'config.yml'
 MAP_ARG_TO_TASK = {
 	'BE': 'BuildingElectricity',
 	'WF': 'WindFarm',
