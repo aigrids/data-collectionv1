@@ -1,9 +1,45 @@
 """ Compute advanced characterization metrics for WindFarm.
 
-Selection bias, aleatoric uncertainty, epistemic uncertainty - the three
-advanced metrics from info.docx that apply to a forecasting task like this
-one (interpolation threshold / smooth function threshold don't map onto a
-simple ridge baseline or dataset-level characterization, so skipped).
+Selection bias and an aleatoric-uncertainty baseline proxy - the advanced
+metrics from info.docx that don't require the model actually being
+benchmarked (interpolation threshold / smooth function threshold don't map
+onto a simple dataset-level characterization, so skipped).
+
+The primary aleatoric/epistemic/total uncertainty decomposition
+(H&W-grounded, see that module's docstring for the full derivation and
+citations) now lives in probabilistic_dmst_windfarm.py, not here. It was
+originally implemented in this file using a separate linear heteroscedastic
+Gaussian ensemble (Ridge-style, unrelated to the actual benchmarked
+model) - moved because the advanced metrics need to characterize the
+uncertainty of the model actually being benchmarked (DMST, the
+FDSTT/HIK KDD Cup 2022 winner's deep-learning component), not an
+auxiliary model with no relation to it. A weak/unrelated model also
+systematically overestimates aleatoric uncertainty: what looks like
+"irreducible noise" to a poorly-fitting auxiliary model is often just
+genuinely-predictable signal that model failed to capture. See
+bug_report/benchmark report for the full account, including a wind-speed
+cutout instability specific to the old linear model that doesn't
+reproduce with DMST.
+
+Metric definitions and what each does/doesn't estimate:
+
+selection_bias
+    Standardized mean difference between train and test target
+    distributions. Not covered by H&W; see the main report for its
+    separate citations. Estimates distributional shift between train and
+    test (label shift), not uncertainty of any kind. Verified against
+    info.docx directly: it gives no formula for this (or any advanced)
+    metric, so this is the standard practical choice from the
+    covariate-balance literature, not a guess - see main report.
+
+aleatoric_uncertainty_binned_proxy
+    Empirical, non-parametric proxy, NOT from H&W: bin test records by
+    "most recent known power output," measure variance of actual outcomes
+    within each bin. Only conditions on one variable (not the full
+    feature vector), and doesn't distinguish irreducible noise from
+    unmodeled variation explainable by other features. Kept as a simple,
+    model-free baseline for comparison against the DMST-based estimate in
+    probabilistic_dmst_windfarm.py, not as the primary estimate.
 
 Example usage:
 
@@ -15,9 +51,6 @@ import sys
 import json
 
 import numpy as np
-from sklearn.linear_model import Ridge
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 
 from aigrids import load
@@ -28,9 +61,6 @@ from windfarm_features import records_to_arrays, drop_nan_labels
 ARG = sys.argv[1] if len(sys.argv) > 1 else 'odd_time_predict48h'
 PATH_CONFIG = 'config.yml'
 DATA_FRAC = float(sys.argv[2]) if len(sys.argv) > 2 else 1
-RIDGE_ALPHA = float(sys.argv[3]) if len(sys.argv) > 3 else 100.0
-SEED = 0
-N_BOOTSTRAP = 20
 N_BINS = 10
 
 
@@ -49,11 +79,10 @@ def selection_bias(y_train, y_test):
 	return float(mean_diff / pooled_std) if pooled_std > 0 else float("nan")
 
 
-def aleatoric_uncertainty(last_known_power, y_test, n_bins=N_BINS):
-	""" Irreducible noise: bin test records by their most recent known
-	power output, measure variance of actual outcomes *within* each bin,
-	average across bins. Given a similar starting condition, how much
-	does the future still vary just from real-world randomness?
+def aleatoric_uncertainty_binned_proxy(last_known_power, y_test, n_bins=N_BINS):
+	""" Empirical proxy (not from H&W, see module docstring): bin test
+	records by their most recent known power output, measure variance of
+	actual outcomes *within* each bin, average across bins.
 	"""
 	target = y_test.mean(axis=1)
 
@@ -72,31 +101,6 @@ def aleatoric_uncertainty(last_known_power, y_test, n_bins=N_BINS):
 		return float("nan")
 
 	return float(np.average(bin_variances, weights=bin_weights))
-
-
-def epistemic_uncertainty(X_train, y_train, X_test, alpha, n_bootstrap=N_BOOTSTRAP, seed=SEED):
-	""" Uncertainty from limited training data: bootstrap-resample the
-	training set, refit ridge each time, measure how much predictions on
-	the same test points vary across refits.
-	"""
-	rng = np.random.default_rng(seed)
-	n_train = len(X_train)
-	predictions = []
-
-	for _ in range(n_bootstrap):
-		idx = rng.integers(0, n_train, size=n_train)
-		model = Pipeline([
-			("impute", SimpleImputer(strategy="mean")),
-			("scale", StandardScaler()),
-			("ridge", Ridge(alpha=alpha)),
-		])
-		model.fit(X_train[idx], y_train[idx])
-		predictions.append(model.predict(X_test).mean(axis=1))
-
-	predictions = np.stack(predictions)  # [n_bootstrap, n_test]
-	per_point_variance = predictions.var(axis=0)
-
-	return float(per_point_variance.mean())
 
 
 def main():
@@ -126,13 +130,11 @@ def main():
 	results = {
 		"subtask_name": ARG,
 		"data_frac": DATA_FRAC,
-		"ridge_alpha": RIDGE_ALPHA,
 		"n_train": int(X_train.shape[0]),
 		"n_test": int(X_test.shape[0]),
 		"selection_bias": selection_bias(y_train, y_test),
-		"aleatoric_uncertainty": aleatoric_uncertainty(last_known_power, y_test),
-		"epistemic_uncertainty": epistemic_uncertainty(
-			X_train, y_train, X_test, alpha=RIDGE_ALPHA
+		"aleatoric_uncertainty_binned_proxy": aleatoric_uncertainty_binned_proxy(
+			last_known_power, y_test
 		),
 	}
 
