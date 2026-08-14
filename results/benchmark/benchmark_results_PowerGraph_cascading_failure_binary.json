@@ -1,0 +1,65 @@
+{
+  "subtask": "cascading_failure_binary",
+  "best_val_f1": 0.8682745825602969,
+  "test_metrics": {
+    "accuracy": 0.9827959183673469,
+    "precision": 0.7117873382301504,
+    "recall": 0.9907497565725414,
+    "f1": 0.8284144107469977,
+    "auroc": 0.9959902760933733,
+    "auprc": 0.9387840834645951
+  },
+  "computation_time": {
+    "avg_train_time_per_epoch_s": 26.645513399996464,
+    "avg_infer_time_per_graph_ms": 1.2424442000337876
+  },
+  "batch_scaling_factor": {
+    "batch_4": {
+      "total_time_s": 0.27568563333382673,
+      "scaling_factor": 0.4083913967206837
+    },
+    "batch_8": {
+      "total_time_s": 0.1089443999978054,
+      "scaling_factor": 0.16138655882051514
+    },
+    "batch_16": {
+      "total_time_s": 0.12553266666509444,
+      "scaling_factor": 0.18595985744150678
+    },
+    "batch_32": {
+      "total_time_s": 0.05708246666714937,
+      "scaling_factor": 0.08456004039293046
+    },
+    "batch_64": {
+      "total_time_s": 0.03562753333001941,
+      "scaling_factor": 0.0527774259485652
+    }
+  },
+  "perturbation_robustness": {
+    "sigma_0.01": 0.7754982018928905,
+    "sigma_0.05": 1.2070633555537418,
+    "sigma_0.1": 1.7336737585886122
+  },
+  "training_data_efficiency": {
+    "frac_0.05": {
+      "n_samples": 3062,
+      "test_f1": 0.1277497027348395
+    },
+    "frac_0.1": {
+      "n_samples": 6125,
+      "test_f1": 0.14596136962247586
+    },
+    "frac_0.25": {
+      "n_samples": 15312,
+      "test_f1": 0.46441281138790036
+    },
+    "frac_0.5": {
+      "n_samples": 30625,
+      "test_f1": 0.27127587606548503
+    },
+    "frac_1.0": {
+      "n_samples": 61250,
+      "test_f1": 0.8078320549051272
+    }
+  }
+}
