@@ -1,0 +1,70 @@
+{
+  "subtask": "cascading_failure_multiclass",
+  "task_type": "multiclass",
+  "best_val_primary_metric": 0.8232172013689985,
+  "test_metrics": {
+    "accuracy": 0.9513265306122449,
+    "macro_precision": 0.7403946652659813,
+    "macro_recall": 0.9643581442757899,
+    "macro_f1": 0.8175786151296199,
+    "per_class_f1": [
+      0.8996505242136795,
+      0.5715674362089915,
+      0.8254211332312406,
+      0.9736753668645681
+    ]
+  },
+  "computation_time": {
+    "avg_train_time_per_epoch_s": 19.978681200000818,
+    "avg_infer_time_per_graph_ms": 0.7619356000068365
+  },
+  "batch_scaling_factor": {
+    "batch_4": {
+      "total_time_s": 0.11351033333266969,
+      "scaling_factor": 0.3024559944361035
+    },
+    "batch_8": {
+      "total_time_s": 0.0761816999996275,
+      "scaling_factor": 0.20299131501703183
+    },
+    "batch_16": {
+      "total_time_s": 0.04866280000108721,
+      "scaling_factor": 0.12966533648736916
+    },
+    "batch_32": {
+      "total_time_s": 0.03327779999987494,
+      "scaling_factor": 0.08867095881138679
+    },
+    "batch_64": {
+      "total_time_s": 0.028769266666737774,
+      "scaling_factor": 0.07665766546014746
+    }
+  },
+  "perturbation_robustness": {
+    "sigma_0.01": 1.1342175334498836,
+    "sigma_0.05": 2.7399309784244896,
+    "sigma_0.1": 4.706061868178264
+  },
+  "training_data_efficiency": {
+    "frac_0.05": {
+      "n_samples": 3062,
+      "primary_metric": 0.20410293279134084
+    },
+    "frac_0.1": {
+      "n_samples": 6125,
+      "primary_metric": 0.48200105853273356
+    },
+    "frac_0.25": {
+      "n_samples": 15312,
+      "primary_metric": 0.5680879966198885
+    },
+    "frac_0.5": {
+      "n_samples": 30625,
+      "primary_metric": 0.44969243876710546
+    },
+    "frac_1.0": {
+      "n_samples": 61250,
+      "primary_metric": 0.5421947787483563
+    }
+  }
+}

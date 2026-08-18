@@ -1,0 +1,63 @@
+{
+  "subtask": "demand_not_served_regression",
+  "task_type": "regression",
+  "best_val_primary_metric": -0.022903716191649437,
+  "test_metrics": {
+    "mae": 0.00381441880017519,
+    "rmse": 0.02218221127986908,
+    "r2": 0.5588135123252869
+  },
+  "computation_time": {
+    "avg_train_time_per_epoch_s": 19.340976733335992,
+    "avg_infer_time_per_graph_ms": 0.602511599950958
+  },
+  "batch_scaling_factor": {
+    "batch_4": {
+      "total_time_s": 0.14967569999862462,
+      "scaling_factor": 0.4007601130439483
+    },
+    "batch_8": {
+      "total_time_s": 0.0974839333333269,
+      "scaling_factor": 0.26101546305106177
+    },
+    "batch_16": {
+      "total_time_s": 0.054450866666835886,
+      "scaling_factor": 0.1457934419611375
+    },
+    "batch_32": {
+      "total_time_s": 0.03463289999975435,
+      "scaling_factor": 0.09273038254752676
+    },
+    "batch_64": {
+      "total_time_s": 0.03188876666778621,
+      "scaling_factor": 0.0853829027339209
+    }
+  },
+  "perturbation_robustness": {
+    "sigma_0.01": 0.08124521840363741,
+    "sigma_0.05": 0.07283793257859845,
+    "sigma_0.1": 0.08921186717537542
+  },
+  "training_data_efficiency": {
+    "frac_0.05": {
+      "n_samples": 3062,
+      "primary_metric": -0.03534865379333496
+    },
+    "frac_0.1": {
+      "n_samples": 6125,
+      "primary_metric": -0.03348185494542122
+    },
+    "frac_0.25": {
+      "n_samples": 15312,
+      "primary_metric": -0.029862551018595695
+    },
+    "frac_0.5": {
+      "n_samples": 30625,
+      "primary_metric": -0.02515586093068123
+    },
+    "frac_1.0": {
+      "n_samples": 61250,
+      "primary_metric": -0.02410132810473442
+    }
+  }
+}

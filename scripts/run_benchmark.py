@@ -1,13 +1,8 @@
 """ Benchmark a GNN model on a PowerGraph sub-task.
 
-Currently implemented for: cascading_failure_binary
-(other sub-tasks require different model heads: multiclass -> softmax,
-demand_not_served_regression -> regression head, cascading_failure_sequence
--> sequence model; not yet implemented here.)
+Supports: cascading_failure_binary, cascading_failure_multiclass,
+demand_not_served_regression only.
 
-Example usage:
-
-    $ python scripts/benchmark.py cascading_failure_binary
 
 """
 import os
@@ -27,12 +22,24 @@ import benchmark
 SUBTASK = sys.argv[1] if len(sys.argv) > 1 else "cascading_failure_binary"
 PATH_CONFIG = "config_arsam.yml"
 
+if SUBTASK not in features.SUBTASK_CONFIG:
+    raise ValueError(
+        f"Unsupported subtask: {SUBTASK}. "
+        f"Supported: {list(features.SUBTASK_CONFIG.keys())}. "
+        f"(cascading_failure_sequence requires a different architecture "
+        f"and is not yet implemented.)"
+    )
+
 
 def main():
     cfg = utils.parse_config(PATH_CONFIG)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    print(f"Loading PowerGraph / {SUBTASK} ...")
+    task_cfg = features.SUBTASK_CONFIG[SUBTASK]
+    task_type = task_cfg["task_type"]
+    out_channels = task_cfg["out_channels"]
+
+    print(f"Loading PowerGraph / {SUBTASK} (task_type={task_type}) ...")
     ds = load.load_task(
         task_name="PowerGraph",
         subtask_name=SUBTASK,
@@ -40,50 +47,50 @@ def main():
     )
 
     print("Converting to PyG format (includes structural feature computation)...")
-    train_list = features.to_pyg_dataset(ds["train_data"])
-    val_list = features.to_pyg_dataset(ds["val_data"])
-    test_list = features.to_pyg_dataset(ds["test_data"])
+    train_list = features.to_pyg_dataset(ds["train_data"], task_type=task_type)
+    val_list = features.to_pyg_dataset(ds["val_data"], task_type=task_type)
+    test_list = features.to_pyg_dataset(ds["test_data"], task_type=task_type)
 
     val_loader = DataLoader(val_list, batch_size=32)
     test_loader = DataLoader(test_list, batch_size=32)
-    train_loader = benchmark.make_balanced_loader(train_list)
+    train_loader = benchmark.make_balanced_loader(train_list, task_type=task_type)
 
     def model_factory():
-        return models.GINE(node_in=6, edge_in=4, hidden_channels=64)
+        return models.GINE(node_in=6, edge_in=4, hidden_channels=64,
+                            out_channels=out_channels, task_type=task_type)
 
     model = model_factory().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     print("Training...")
-    best_f1, best_state = 0.0, None
+    best_metric, best_state = -float("inf"), None
     for epoch in range(1, 31):
-        loss = benchmark.train_epoch(model, train_loader, optimizer, device)
-        scores, labels = benchmark.get_scores_and_labels(model, val_loader, device)
-        metrics = benchmark.classification_metrics(scores, labels)
-        print(f"Epoch {epoch:02d} | Loss: {loss:.4f} | Val F1: {metrics['f1']:.4f}")
-        if metrics["f1"] > best_f1:
-            best_f1 = metrics["f1"]
+        loss = benchmark.train_epoch(model, train_loader, optimizer, device, task_type=task_type)
+        val_metrics, primary_metric = benchmark.evaluate(model, val_loader, device, task_type,
+                                                           n_classes=out_channels)
+        print(f"Epoch {epoch:02d} | Loss: {loss:.4f} | Val metrics: {val_metrics}")
+        if primary_metric > best_metric:
+            best_metric = primary_metric
             best_state = model.state_dict()
 
     model.load_state_dict(best_state)
 
     print("Running full benchmark suite...")
-    scores, labels = benchmark.get_scores_and_labels(model, test_loader, device)
-    test_metrics = benchmark.classification_metrics(scores, labels)
-    test_metrics.update(benchmark.auroc_auprc(scores, labels))
+    test_metrics, _ = benchmark.evaluate(model, test_loader, device, task_type, n_classes=out_channels)
 
     results = {
         "subtask": SUBTASK,
-        "best_val_f1": best_f1,
+        "task_type": task_type,
+        "best_val_primary_metric": best_metric,
         "test_metrics": test_metrics,
         "computation_time": benchmark.computation_time(
-            model, train_loader, test_list, optimizer, device),
+            model, train_loader, test_list, optimizer, device, task_type=task_type),
         "batch_scaling_factor": benchmark.batch_scaling_factor(
             model, test_list, device),
         "perturbation_robustness": benchmark.perturbation_robustness(
-            model, test_list, device),
+    model, test_list, device, task_type=task_type),
         "training_data_efficiency": benchmark.training_data_efficiency(
-            model_factory, train_list, test_list, device),
+            model_factory, train_list, test_list, device, task_type, n_classes=out_channels),
     }
 
     path_root = os.path.join(cfg["root_path_results"], "benchmark")
