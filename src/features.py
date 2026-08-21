@@ -27,9 +27,28 @@ def structural_features(edge_index, num_nodes):
     return feats
 
 
-def to_pyg_data(sample, include_structural=True):
+def _convert_label(label, task_type):
+    """ Convert a raw PowerGraph label into the tensor format expected
+    by the loss function for a given task type.
+
+    - binary: raw label is already a float (0.0 / 1.0) -> shape (1,)
+    - multiclass: raw label is a one-hot list, e.g. [0,0,0,1] -> class
+      index as a LongTensor, shape (1,), for use with cross_entropy
+    - regression: raw label is already a float -> shape (1,)
+    """
+    if task_type == "multiclass":
+        class_idx = int(np.argmax(label))
+        return torch.tensor([class_idx], dtype=torch.long)
+    else:
+        return torch.tensor([label], dtype=torch.float)
+
+
+def to_pyg_data(sample, task_type="binary", include_structural=True):
     """ Convert one PowerGraph data record (as returned by aigrids.load)
     into a PyTorch Geometric Data object.
+
+    task_type: one of 'binary', 'multiclass', 'regression'. Determines
+    how sample["labels"] is converted (see _convert_label).
     """
     x_node = sample["x_node"]
     edge_index_raw = sample["edge_index"] - 1  # convert to 0-indexed
@@ -43,10 +62,22 @@ def to_pyg_data(sample, include_structural=True):
     x = torch.tensor(x, dtype=torch.float)
     edge_index = torch.tensor(edge_index_raw, dtype=torch.long).t().contiguous()
     edge_attr = torch.tensor(sample["x_edge"], dtype=torch.float)
-    y = torch.tensor([sample["labels"]], dtype=torch.float)
+    y = _convert_label(sample["labels"], task_type)
     return Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y)
 
 
-def to_pyg_dataset(data_list, include_structural=True):
+def to_pyg_dataset(data_list, task_type="binary", include_structural=True):
     """ Convert a list of PowerGraph data records into a list of PyG Data objects. """
-    return [to_pyg_data(s, include_structural=include_structural) for s in data_list]
+    return [to_pyg_data(s, task_type=task_type, include_structural=include_structural)
+            for s in data_list]
+
+
+# maps each PowerGraph subtask name to its task type and number of output classes
+SUBTASK_CONFIG = {
+    "cascading_failure_binary": {"task_type": "binary", "out_channels": 1},
+    "cascading_failure_multiclass": {"task_type": "multiclass", "out_channels": 4},
+    "demand_not_served_regression": {"task_type": "regression", "out_channels": 1},
+    # cascading_failure_sequence intentionally omitted: requires a
+    # fundamentally different sequence-prediction architecture, not
+    # a fixed-size classification/regression head.
+}

@@ -1,5 +1,5 @@
 """ Model training, evaluation, and general performance benchmarking
-functions for PowerGraph, following the AI.grids v1 metric definitions.
+functions for PowerGraph.
 
 """
 import time
@@ -10,31 +10,49 @@ from torch.utils.data import WeightedRandomSampler
 from torch_geometric.loader import DataLoader
 
 
-def make_balanced_loader(data_list, batch_size=32):
+def make_balanced_loader(data_list, batch_size=32, task_type="binary"):
     """ Create a DataLoader with weighted random sampling to balance
-    the positive/negative class distribution during training.
+    the class distribution during training. For regression, falls back
+    to a standard shuffled loader since there are no discrete classes
+    to balance.
     """
-    labels = np.array([s.y.item() for s in data_list])
-    n_pos = max(labels.sum(), 1)
-    n_neg = max(len(labels) - n_pos, 1)
-    class_weights = {0: 1.0 / n_neg, 1: 1.0 / n_pos}
+    if task_type == "regression":
+        return DataLoader(data_list, batch_size=batch_size, shuffle=True)
+
+    if task_type == "binary":
+        labels = np.array([s.y.item() for s in data_list])
+    else:  # multiclass
+        labels = np.array([s.y.item() for s in data_list])  # class index, already scalar
+
+    unique, counts = np.unique(labels, return_counts=True)
+    freq = dict(zip(unique, counts))
+    class_weights = {cls: 1.0 / cnt for cls, cnt in freq.items()}
     sample_weights = np.array([class_weights[l] for l in labels])
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
     return DataLoader(data_list, batch_size=batch_size, sampler=sampler)
 
 
-def train_epoch(model, loader, optimizer, device, use_edge_attr=True):
+def compute_loss(out, y, task_type):
+    """ Task-appropriate loss function. """
+    if task_type == "binary":
+        return F.binary_cross_entropy_with_logits(out, y)
+    elif task_type == "multiclass":
+        return F.cross_entropy(out, y)
+    elif task_type == "regression":
+        return F.mse_loss(out, y)
+    else:
+        raise ValueError(f"Unknown task_type: {task_type}")
+
+
+def train_epoch(model, loader, optimizer, device, task_type="binary"):
     """ Run one training epoch. Returns average loss. """
     model.train()
     total_loss, n = 0, 0
     for batch in loader:
         batch = batch.to(device)
         optimizer.zero_grad()
-        if use_edge_attr:
-            out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
-        else:
-            out = model(batch.x, batch.edge_index, batch.batch)
-        loss = F.binary_cross_entropy_with_logits(out, batch.y)
+        out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+        loss = compute_loss(out, batch.y, task_type)
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
@@ -43,25 +61,31 @@ def train_epoch(model, loader, optimizer, device, use_edge_attr=True):
     return total_loss / n
 
 
-def get_scores_and_labels(model, loader, device, use_edge_attr=True):
-    """ Returns raw sigmoid scores and true labels for a dataset. """
+def get_predictions(model, loader, device, task_type="binary"):
+    """ Returns raw model outputs and true labels for a dataset.
+    For binary: sigmoid scores. For multiclass: softmax probabilities.
+    For regression: raw predicted values.
+    """
     model.eval()
-    scores, labels = [], []
+    outputs, labels = [], []
     with torch.no_grad():
         for batch in loader:
             batch = batch.to(device)
-            if use_edge_attr:
-                out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
-            else:
-                out = model(batch.x, batch.edge_index, batch.batch)
-            scores.append(torch.sigmoid(out).cpu().numpy())
+            out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+            if task_type == "binary":
+                outputs.append(torch.sigmoid(out).cpu().numpy())
+            elif task_type == "multiclass":
+                outputs.append(F.softmax(out, dim=-1).cpu().numpy())
+            else:  # regression
+                outputs.append(out.cpu().numpy())
             labels.append(batch.y.cpu().numpy())
-    return np.concatenate(scores), np.concatenate(labels)
+    return np.concatenate(outputs), np.concatenate(labels)
 
 
 def classification_metrics(scores, labels, threshold=0.5):
-    """ Accuracy, precision, recall, F1 at a given decision threshold. """
+    """ Binary classification: accuracy, precision, recall, F1 at a threshold. """
     pred = (scores > threshold).astype(float)
+    labels = labels.reshape(-1)
     tp = ((pred == 1) & (labels == 1)).sum()
     fp = ((pred == 1) & (labels == 0)).sum()
     tn = ((pred == 0) & (labels == 0)).sum()
@@ -73,14 +97,61 @@ def classification_metrics(scores, labels, threshold=0.5):
     return {"accuracy": acc, "precision": prec, "recall": rec, "f1": f1}
 
 
+def multiclass_metrics(probs, labels, n_classes=4):
+    """ Multiclass classification: accuracy and macro-averaged precision/
+    recall/F1 (averaging per-class metrics equally, which matters here
+    since class frequencies are likely imbalanced, mirroring the binary
+    sub-task's imbalance).
+    """
+    pred = np.argmax(probs, axis=1)
+    labels = labels.reshape(-1).astype(int)
+
+    acc = (pred == labels).mean()
+
+    precisions, recalls, f1s = [], [], []
+    for c in range(n_classes):
+        tp = ((pred == c) & (labels == c)).sum()
+        fp = ((pred == c) & (labels != c)).sum()
+        fn = ((pred != c) & (labels == c)).sum()
+        prec = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        rec = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        f1 = 2 * prec * rec / (prec + rec) if (prec + rec) > 0 else 0.0
+        precisions.append(prec)
+        recalls.append(rec)
+        f1s.append(f1)
+
+    return {
+        "accuracy": float(acc),
+        "macro_precision": float(np.mean(precisions)),
+        "macro_recall": float(np.mean(recalls)),
+        "macro_f1": float(np.mean(f1s)),
+        "per_class_f1": [float(f) for f in f1s],
+    }
+
+
+def regression_metrics(preds, labels):
+    """ Regression: MAE, RMSE, and R^2. """
+    preds = preds.reshape(-1)
+    labels = labels.reshape(-1)
+    errors = preds - labels
+    mae = np.mean(np.abs(errors))
+    rmse = np.sqrt(np.mean(errors ** 2))
+    ss_res = np.sum(errors ** 2)
+    ss_tot = np.sum((labels - labels.mean()) ** 2)
+    r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0.0
+    return {"mae": float(mae), "rmse": float(rmse), "r2": float(r2)}
+
+
 def auroc_auprc(scores, labels):
-    """ Threshold-independent classification metrics: AUROC and AUPRC.
+    """ Threshold-independent classification metrics for BINARY tasks only:
+    AUROC and AUPRC.
 
     Proposed here as task-specific metrics for classification/forecasting
     tasks, filling a gap in AI.grids v1 Section 2.3.2, which is fully
     specified for optimization tasks but left unwritten for Forecasting,
     Simulation, and Control.
     """
+    labels = labels.reshape(-1)
     order = np.argsort(-scores)
     labels_sorted = labels[order]
     n_pos = labels.sum()
@@ -104,8 +175,28 @@ def auroc_auprc(scores, labels):
     return {"auroc": float(auroc), "auprc": float(auprc)}
 
 
+def evaluate(model, loader, device, task_type, n_classes=4):
+    """ Convenience wrapper: get predictions and compute the appropriate
+    metrics dict for the given task_type.
+    """
+    outputs, labels = get_predictions(model, loader, device, task_type)
+    if task_type == "binary":
+        metrics = classification_metrics(outputs, labels)
+        metrics.update(auroc_auprc(outputs, labels))
+        primary_metric = metrics["f1"]
+    elif task_type == "multiclass":
+        metrics = multiclass_metrics(outputs, labels, n_classes=n_classes)
+        primary_metric = metrics["macro_f1"]
+    elif task_type == "regression":
+        metrics = regression_metrics(outputs, labels)
+        primary_metric = -metrics["rmse"]  # lower RMSE is better; negate for "higher is better" checkpoint selection
+    else:
+        raise ValueError(f"Unknown task_type: {task_type}")
+    return metrics, primary_metric
+
+
 def computation_time(model, train_loader, test_list, optimizer, device,
-                      use_edge_attr=True, k_train_runs=3, n_infer_samples=500):
+                      task_type="binary", k_train_runs=3, n_infer_samples=500):
     """ AI.grids v1 Table 2: average training time (per epoch) and
     average inference time (per graph).
     """
@@ -116,11 +207,8 @@ def computation_time(model, train_loader, test_list, optimizer, device,
         for batch in train_loader:
             batch = batch.to(device)
             optimizer.zero_grad()
-            if use_edge_attr:
-                out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
-            else:
-                out = model(batch.x, batch.edge_index, batch.batch)
-            loss = F.binary_cross_entropy_with_logits(out, batch.y)
+            out = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+            loss = compute_loss(out, batch.y, task_type)
             loss.backward()
             optimizer.step()
         train_times.append(time.perf_counter() - t0)
@@ -132,10 +220,7 @@ def computation_time(model, train_loader, test_list, optimizer, device,
             sample = test_list[i].to(device)
             batch_idx = torch.zeros(sample.x.shape[0], dtype=torch.long, device=device)
             t0 = time.perf_counter()
-            if use_edge_attr:
-                _ = model(sample.x, sample.edge_index, sample.edge_attr, batch_idx)
-            else:
-                _ = model(sample.x, sample.edge_index, batch_idx)
+            _ = model(sample.x, sample.edge_index, sample.edge_attr, batch_idx)
             infer_times.append(time.perf_counter() - t0)
 
     return {
@@ -144,7 +229,7 @@ def computation_time(model, train_loader, test_list, optimizer, device,
     }
 
 
-def batch_scaling_factor(model, test_list, device, use_edge_attr=True,
+def batch_scaling_factor(model, test_list, device,
                           batch_sizes=(4, 8, 16, 32, 64), n_graphs=256, n_repeats=3):
     """ AI.grids v1 Table 2: batch scaling factor = T_b / (b * T_1). """
     model.eval()
@@ -157,10 +242,7 @@ def batch_scaling_factor(model, test_list, device, use_edge_attr=True,
                 t0 = time.perf_counter()
                 for batch in loader:
                     batch = batch.to(device)
-                    if use_edge_attr:
-                        _ = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
-                    else:
-                        _ = model(batch.x, batch.edge_index, batch.batch)
+                    _ = model(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                 times.append(time.perf_counter() - t0)
         return float(np.mean(times))
 
@@ -175,9 +257,16 @@ def batch_scaling_factor(model, test_list, device, use_edge_attr=True,
     return results
 
 
-def perturbation_robustness(model, test_list, device, use_edge_attr=True,
+def perturbation_robustness(model, test_list, device, task_type="binary",
                              sigmas=(0.01, 0.05, 0.1), n_eval=300):
-    """ AI.grids v1 Table 2: perturbation robustness = (1/(N*sigma)) * sum ||y - y'||_2. """
+    """ AI.grids v1 Table 2: perturbation robustness = (1/(N*sigma)) * sum ||y - y'||_2.
+
+    Outputs are normalized per task_type before comparison, so values are on
+    a comparable, bounded scale for binary (sigmoid) and multiclass (softmax),
+    matching the formula already used for the merged binary results. Regression
+    outputs are left raw, since they are inherently unbounded and not intended
+    to be compared against the classification tasks' robustness values.
+    """
     model.eval()
     results = {}
     with torch.no_grad():
@@ -186,29 +275,28 @@ def perturbation_robustness(model, test_list, device, use_edge_attr=True,
             for i in range(min(n_eval, len(test_list))):
                 sample = test_list[i].to(device)
                 batch_idx = torch.zeros(sample.x.shape[0], dtype=torch.long, device=device)
-                if use_edge_attr:
-                    out_clean = torch.sigmoid(model(sample.x, sample.edge_index, sample.edge_attr, batch_idx))
-                else:
-                    out_clean = torch.sigmoid(model(sample.x, sample.edge_index, batch_idx))
 
+                out_clean = model(sample.x, sample.edge_index, sample.edge_attr, batch_idx)
                 noise = torch.randn_like(sample.x) * sigma
                 x_perturbed = sample.x + noise
-                if use_edge_attr:
-                    out_noisy = torch.sigmoid(model(x_perturbed, sample.edge_index, sample.edge_attr, batch_idx))
-                else:
-                    out_noisy = torch.sigmoid(model(x_perturbed, sample.edge_index, batch_idx))
+                out_noisy = model(x_perturbed, sample.edge_index, sample.edge_attr, batch_idx)
 
-                diffs.append(torch.norm(out_clean - out_noisy, p=2).item())
+                if task_type == "binary":
+                    out_clean = torch.sigmoid(out_clean)
+                    out_noisy = torch.sigmoid(out_noisy)
+                elif task_type == "multiclass":
+                    out_clean = F.softmax(out_clean, dim=-1)
+                    out_noisy = F.softmax(out_noisy, dim=-1)
+                # regression: leave as raw values
+
+                diffs.append(torch.norm((out_clean - out_noisy).float(), p=2).item())
             results[f"sigma_{sigma}"] = float(np.mean(diffs) / sigma)
     return results
 
 
-def training_data_efficiency(model_factory, train_list, test_list, device,
-                              fractions=(0.05, 0.1, 0.25, 0.5, 1.0), epochs=15, seed=42):
-    """ AI.grids v1 Table 2: training data efficiency curve.
-
-    model_factory: a zero-argument callable returning a fresh, untrained model.
-    """
+def training_data_efficiency(model_factory, train_list, test_list, device, task_type,
+                              fractions=(0.05, 0.1, 0.25, 0.5, 1.0), epochs=15, seed=42, n_classes=4):
+    """ AI.grids v1 Table 2: training data efficiency curve. """
     rng = np.random.default_rng(seed)
     results = {}
     for frac in fractions:
@@ -219,13 +307,12 @@ def training_data_efficiency(model_factory, train_list, test_list, device,
         torch.manual_seed(seed)
         model = model_factory().to(device)
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        loader = make_balanced_loader(subset)
+        loader = make_balanced_loader(subset, task_type=task_type)
 
         for _ in range(epochs):
-            train_epoch(model, loader, optimizer, device, use_edge_attr=True)
+            train_epoch(model, loader, optimizer, device, task_type=task_type)
 
         test_loader = DataLoader(test_list, batch_size=32)
-        scores, labels = get_scores_and_labels(model, test_loader, device, use_edge_attr=True)
-        metrics = classification_metrics(scores, labels)
-        results[f"frac_{frac}"] = {"n_samples": n, "test_f1": metrics["f1"]}
+        _, primary_metric = evaluate(model, test_loader, device, task_type, n_classes=n_classes)
+        results[f"frac_{frac}"] = {"n_samples": n, "primary_metric": primary_metric}
     return results
