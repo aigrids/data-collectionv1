@@ -1,0 +1,67 @@
+{
+  "subtask": "cascading_failure_sequence",
+  "note": "Edge-ranking model trained/evaluated only on cascade-positive samples (ground-truth gated). The separate question of whether a cascade occurs at all is covered by the existing cascading_failure_binary model and not retrained here.",
+  "n_train_cascade_positive": 1993,
+  "n_val_cascade_positive": 416,
+  "n_test_cascade_positive": 1581,
+  "best_val_mean_kendall_tau": 0.9782051282051282,
+  "test_metrics": {
+    "top1_accuracy": 0.9728020240354206,
+    "top3_accuracy": 0.9917773561037319,
+    "mean_kendall_tau": 0.9744887202192704,
+    "n_samples_evaluated": 1581
+  },
+  "computation_time": {
+    "avg_train_time_per_epoch_s": 33.44682010000057,
+    "avg_infer_time_per_graph_ms": 1.932175600042683
+  },
+  "batch_scaling_factor": {
+    "batch_4": {
+      "total_time_s": 0.3527253000005051,
+      "scaling_factor": 0.3221707152764199
+    },
+    "batch_8": {
+      "total_time_s": 0.2168307000004764,
+      "scaling_factor": 0.19804789084576657
+    },
+    "batch_16": {
+      "total_time_s": 0.1294573333337515,
+      "scaling_factor": 0.11824318152923227
+    },
+    "batch_32": {
+      "total_time_s": 0.09841663333281758,
+      "scaling_factor": 0.08989136065908962
+    },
+    "batch_64": {
+      "total_time_s": 0.07775853333199241,
+      "scaling_factor": 0.0710227542577112
+    }
+  },
+  "perturbation_robustness": {
+    "sigma_0.01": 501.20917709668475,
+    "sigma_0.05": 478.06884517669675,
+    "sigma_0.1": 464.8166275660197
+  },
+  "training_data_efficiency": {
+    "frac_0.05": {
+      "n_samples": 99,
+      "mean_kendall_tau": 0.8488720219270504
+    },
+    "frac_0.1": {
+      "n_samples": 199,
+      "mean_kendall_tau": 0.7073160446974489
+    },
+    "frac_0.25": {
+      "n_samples": 498,
+      "mean_kendall_tau": 0.9425679949399115
+    },
+    "frac_0.5": {
+      "n_samples": 996,
+      "mean_kendall_tau": 0.9656335652540585
+    },
+    "frac_1.0": {
+      "n_samples": 1993,
+      "mean_kendall_tau": 0.9698081383090872
+    }
+  }
+}
