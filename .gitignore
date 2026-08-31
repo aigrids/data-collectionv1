@@ -7,3 +7,4 @@ config_arsam.yml
 *__pycache__
 *.ipynb_checkpoints
 results/
+references/

@@ -1,25 +1,10 @@
-""" Probabilistic variant of DMST for characterizing the aleatoric/epistemic
-uncertainty (H&W 2021 decomposition) of the actual benchmarked forecasting
-model, replacing the earlier separate linear-Ridge-ensemble approach in
-advanced_metrics_windfarm.py. Reuses DMST's exact architecture and data
-pipeline from dmst_windfarm.py; the only change is the output head (mu,
-log_var instead of a single point estimate) and loss (Gaussian NLL instead
-of MSE). The original deterministic DMSTModel in dmst_windfarm.py is
-unchanged and remains the model used for the main accuracy benchmark.
+""" Probabilistic DMST: estimates aleatoric/epistemic/total uncertainty
+for the benchmarked model.
 
-Ensemble diversity is via different random seeds on the full training set
-(standard deep-ensemble practice, Lakshminarayanan et al. 2017 - the usual
-citation behind H&W's "ensemble variance as epistemic indicator" claim,
-H&W Sec 4.5 p.482), not bootstrap resampling - bootstrap wastes ~37% of
-training data per member for no established benefit with neural nets,
-unlike the earlier linear model where bootstrap was the standard approach
-for a simple model fit in closed form.
-
-Aleatoric/epistemic/total formulas: identical to the H&W decomposition
-already used in advanced_metrics_windfarm.py (see that module's docstring
-for the full derivation and H&W section references), now computed natively
-per horizon step from DMST's own decoder output instead of subsampling 6
-representative checkpoints from a separate linear model.
+- Same architecture as dmst_windfarm.py, but outputs (mu, log_var) and
+  trains with Gaussian NLL instead of MSE
+- Ensemble: N_ENSEMBLE members, different seed each, full training set
+  (not bootstrap)
 
 Example usage:
 

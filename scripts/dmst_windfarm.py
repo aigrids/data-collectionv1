@@ -3,21 +3,17 @@ network) - the GRU encoder-decoder component of team HIK's FDSTT model,
 1st place at KDD Cup 2022 (Li et al., "Complementary Fusion of Deep
 Spatio-Temporal Network and Tree Model for Wind Power Forecasting").
 
-Only DMST is implemented, not the LightGBM ST-Tree module or the
-hand-tuned ensemble rule (fit to a different competition test setup than
-our sub-tasks) - see bug_report/benchmark report for the scoping decision.
-
-No public code exists for this paper (checked GitHub + the official
-competition site); reimplemented from the paper's description. Adapted to
-our task's own fixed data structure (144-step history, defined by
-aigrids, not ours to change) rather than the paper's own T=432 choice.
-
-Simplifications vs. the paper, documented rather than hidden:
-- Teacher forcing during training (ratio 1.0), free-running/autoregressive
-  at evaluation - standard practice, not explicitly specified in the paper.
-- Training loss is MSE (paper doesn't name a specific decoder loss).
+- Only DMST is implemented, not the LightGBM ST-Tree module or the
+  hand-tuned ensemble rule (fit to a different competition test setup
+  than our sub-tasks) - see report for the scoping decision
+- No public code exists for this paper (checked GitHub + the official
+  competition site); reimplemented from the paper's description
+- Teacher forcing during training (ratio 1.0), free-running/
+  autoregressive at evaluation - standard practice, not specified in
+  the paper
+- Training loss is MSE (paper doesn't name a specific decoder loss)
 - Semantic-graph similarity uses 0-filled diffs where data is missing,
-  a simplification given real gaps in the raw SCADA data.
+  a simplification given real gaps in the raw SCADA data
 
 Example usage:
 

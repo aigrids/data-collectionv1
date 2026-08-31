@@ -1,45 +1,15 @@
-""" Compute advanced characterization metrics for WindFarm.
+""" Dataset-level advanced characterization metrics for WindFarm.
 
-Selection bias and an aleatoric-uncertainty baseline proxy - the advanced
-metrics from info.docx that don't require the model actually being
-benchmarked (interpolation threshold / smooth function threshold don't map
-onto a simple dataset-level characterization, so skipped).
-
-The primary aleatoric/epistemic/total uncertainty decomposition
-(H&W-grounded, see that module's docstring for the full derivation and
-citations) now lives in probabilistic_dmst_windfarm.py, not here. It was
-originally implemented in this file using a separate linear heteroscedastic
-Gaussian ensemble (Ridge-style, unrelated to the actual benchmarked
-model) - moved because the advanced metrics need to characterize the
-uncertainty of the model actually being benchmarked (DMST, the
-FDSTT/HIK KDD Cup 2022 winner's deep-learning component), not an
-auxiliary model with no relation to it. A weak/unrelated model also
-systematically overestimates aleatoric uncertainty: what looks like
-"irreducible noise" to a poorly-fitting auxiliary model is often just
-genuinely-predictable signal that model failed to capture. See
-bug_report/benchmark report for the full account, including a wind-speed
-cutout instability specific to the old linear model that doesn't
-reproduce with DMST.
-
-Metric definitions and what each does/doesn't estimate:
+- Train-test distribution shift + a simple binned aleatoric-uncertainty
+  baseline
+- Aleatoric/epistemic/total uncertainty itself is computed in
+  probabilistic_dmst_windfarm.py, not here
 
 selection_bias
-    Standardized mean difference between train and test target
-    distributions. Not covered by H&W; see the main report for its
-    separate citations. Estimates distributional shift between train and
-    test (label shift), not uncertainty of any kind. Verified against
-    info.docx directly: it gives no formula for this (or any advanced)
-    metric, so this is the standard practical choice from the
-    covariate-balance literature, not a guess - see main report.
+    Standardized mean difference, train vs. test target means.
 
 aleatoric_uncertainty_binned_proxy
-    Empirical, non-parametric proxy, NOT from H&W: bin test records by
-    "most recent known power output," measure variance of actual outcomes
-    within each bin. Only conditions on one variable (not the full
-    feature vector), and doesn't distinguish irreducible noise from
-    unmodeled variation explainable by other features. Kept as a simple,
-    model-free baseline for comparison against the DMST-based estimate in
-    probabilistic_dmst_windfarm.py, not as the primary estimate.
+    Within-bin variance of outcomes, binned by most recent known power.
 
 Example usage:
 

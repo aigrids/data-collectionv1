@@ -1,12 +1,12 @@
-""" Turbine spatial/semantic neighbor graphs and raw cross-turbine lookups
-needed by DMST (FDSTT paper, Li et al. 2022), not available in aigrids'
-per-turbine windowed records.
+""" Turbine spatial/semantic neighbor graphs and raw cross-turbine
+lookups needed by DMST (FDSTT paper, Li et al. 2022) - not available in
+aigrids' per-turbine windowed records.
 
-Both graphs are built once from the complete raw dataset (all turbines,
-all timestamps) - turbine positions and their wind-pattern relationships
-are treated as a static structural property of the wind farm, same as how
-turbine position is already given per-record regardless of train/test
-split.
+- Both graphs built once from the complete raw dataset (all turbines,
+  all timestamps)
+- Turbine positions and their wind-pattern relationships are treated as
+  a static structural property of the wind farm, same as how turbine
+  position is already given per-record regardless of train/test split
 
 """
 import os
