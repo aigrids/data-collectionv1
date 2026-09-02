@@ -6,3 +6,5 @@ config_arsam.yml
 *.egg-info/
 *__pycache__
 *.ipynb_checkpoints
+results/
+references/

@@ -5,7 +5,7 @@ Example usage:
 	$ python scripts/download.py
 
 """
-from aidotgrids import load
+from aigrids import load
 
 import utils
 
