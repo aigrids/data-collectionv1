@@ -1,0 +1,57 @@
+{
+  "task_name": "SolarCube",
+  "data_frac": 1,
+  "characterization_method": "manual (bypasses aigrids package's analyse.py / load_task(), which OOM-kills even at ~500GB allocated memory on HPC, likely due to loading full .h5 satellite arrays into memory instead of using HDF5 lazy/metadata access). Computed directly from the per-station availability_IDs/*_timestamps.csv files and station_features.csv, without touching the large .h5 files.",
+  "dataset_totals": {
+    "n_stations": 19,
+    "n_stations_train": 14,
+    "n_stations_test": 5,
+    "n_timesteps_per_station": 35040,
+    "n_datapoints_total_rows": 665760,
+    "n_datapoints_all_modalities_available": 240776,
+    "modality_availability_counts": {
+      "vis047": 314608,
+      "vis086": 309920,
+      "ir133": 662258,
+      "ssr": 269940,
+      "sza": 316351,
+      "insitu": 283546
+    }
+  },
+  "odd_space_area": {
+    "n_datapoints": 240776,
+    "train_val_test_split": [0.7368, 0.0, 0.2632],
+    "split_basis": "station-based spatial holdout, verified from station_features.csv 'test' column (14 train stations / 5 test stations out of 19)",
+    "note": "No separate validation station subset identified in the data; val fraction reported as 0 pending clarification. n_datapoints uses records where all 6 modalities are simultaneously available."
+  },
+  "odd_space_point": {
+    "n_datapoints": 240776,
+    "train_val_test_split": [0.7368, 0.0, 0.2632],
+    "split_basis": "same station-based split as odd_space_area",
+    "note": "Same caveat as odd_space_area. 'area' vs 'point' likely differ in spatial resolution of the prediction target rather than in split ratio, but this was not verified against package source."
+  },
+  "odd_time_area": {
+    "n_datapoints": 240776,
+    "train_val_test_split": null,
+    "split_basis": "UNVERIFIED - temporal split boundary is not present in any data file examined; it is determined internally by the aigrids package's own loading code, which was not inspected.",
+    "note": "n_datapoints reported (total records with all modalities available), but train/val/test split ratio is a placeholder pending confirmation from group leader or package source inspection."
+  },
+  "odd_time_point": {
+    "n_datapoints": 240776,
+    "train_val_test_split": null,
+    "split_basis": "UNVERIFIED - see odd_time_area",
+    "note": "See odd_time_area caveat."
+  },
+  "odd_spacetime_area": {
+    "n_datapoints": 240776,
+    "train_val_test_split": null,
+    "split_basis": "UNVERIFIED - combines the spatial holdout (verified) with an unverified temporal boundary",
+    "note": "See odd_time_area caveat."
+  },
+  "odd_spacetime_point": {
+    "n_datapoints": 240776,
+    "train_val_test_split": null,
+    "split_basis": "UNVERIFIED - see odd_spacetime_area",
+    "note": "See odd_time_area caveat."
+  }
+}
