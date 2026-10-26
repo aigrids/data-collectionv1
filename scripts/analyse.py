@@ -6,6 +6,7 @@ Choose arguments from:
 	- SC (SolarCube)
 	- PG (PowerGraph)
 	- OD (OPFData)
+	- SI (SystemImbalance)
 
 
 Example usage:
@@ -31,7 +32,8 @@ MAP_ARG_TO_TASK = {
 	'WF': 'WindFarm',
 	'SC': 'SolarCube',
 	'PG': 'PowerGraph',
-	'OD': 'OPFData'
+	'OD': 'OPFData',
+	'SI': 'SystemImbalance'
 }
 
 MAP_TASK_TO_AVAILSUBTASKS = {
@@ -78,6 +80,12 @@ MAP_TASK_TO_AVAILSUBTASKS = {
 		'train_medium_test_large',
 		'train_large_test_small',
 		'train_large_test_medium'
+	],
+	'SystemImbalance': [
+		'odd_time_volume_predict1h',
+		'odd_space_volume_predict1h',
+		'odd_spacetime_volume_predict1h',
+		'odd_time_price_predict1h'
 	]
 }
 

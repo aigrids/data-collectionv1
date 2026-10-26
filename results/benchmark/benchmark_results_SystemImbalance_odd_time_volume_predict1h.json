@@ -1,0 +1,154 @@
+{
+  "subtask_name": "odd_time_volume_predict1h",
+  "data_frac": 1.0,
+  "n_search": 0,
+  "n_train": 70508,
+  "n_val": 14104,
+  "n_test": 56408,
+  "n_features": 207,
+  "n_steps": 4,
+  "test_metrics_mean_predictor": {
+    "mae": 80.64075469970703,
+    "rmse": 111.18058013916016,
+    "r2": -6.914138793945312e-05,
+    "sign_accuracy": 0.5176884961562177
+  },
+  "test_metrics_daily_profile": {
+    "mae": 80.61293029785156,
+    "rmse": 111.16161346435547,
+    "r2": 0.0002720355987548828,
+    "sign_accuracy": 0.5077563223897547
+  },
+  "test_metrics_persistence": {
+    "mae": 61.08869171142578,
+    "rmse": 86.70285034179688,
+    "r2": 0.3918094038963318,
+    "sign_accuracy": 0.7514650365316452
+  },
+  "l2": {
+    "best_params": {
+      "num_leaves": 900,
+      "max_depth": 10,
+      "subsample": 0.9,
+      "learning_rate": 0.01,
+      "min_child_samples": 500,
+      "n_estimators": 765
+    },
+    "train_time_sec": 26.20479401695775,
+    "val_metrics": {
+      "mae": 51.328490492838604,
+      "rmse": 72.14204232390061,
+      "r2": 0.48395543124016027,
+      "sign_accuracy": 0.7478374929098128
+    },
+    "test_metrics": {
+      "mae": 54.2394100378001,
+      "rmse": 76.515729120138,
+      "r2": 0.5263324963422562,
+      "sign_accuracy": 0.7639877744212147
+    },
+    "test_metrics_per_step": [
+      {
+        "mae": 48.61230173517938,
+        "rmse": 68.5518244455424,
+        "r2": 0.6250913563276704,
+        "sign_accuracy": 0.7935837606685948
+      },
+      {
+        "mae": 52.40920629792395,
+        "rmse": 73.72160462300174,
+        "r2": 0.5553228956074636,
+        "sign_accuracy": 0.771837683422346
+      },
+      {
+        "mae": 56.15276134117812,
+        "rmse": 78.79351492981023,
+        "r2": 0.49311095255060966,
+        "sign_accuracy": 0.753464520822613
+      },
+      {
+        "mae": 59.78353410235404,
+        "rmse": 84.11907133493784,
+        "r2": 0.43091376523750713,
+        "sign_accuracy": 0.737064376463908
+      }
+    ],
+    "computation_time": {
+      "train_time_s": 26.20479401695775,
+      "avg_infer_time_per_data_point_ms": 0.45967811066657305
+    },
+    "batch_scaling_factor": {
+      "batch_4": {
+        "total_time_s": 0.03724735629900048,
+        "scaling_factor": 0.3176239591224715
+      },
+      "batch_8": {
+        "total_time_s": 0.025189687653134268,
+        "scaling_factor": 0.2148031193736465
+      },
+      "batch_16": {
+        "total_time_s": 0.019126977014821023,
+        "scaling_factor": 0.16310382183164474
+      },
+      "batch_32": {
+        "total_time_s": 0.016102788019149255,
+        "scaling_factor": 0.1373152833316478
+      },
+      "batch_64": {
+        "total_time_s": 0.014381945676480731,
+        "scaling_factor": 0.12264093292899565
+      }
+    },
+    "perturbation_robustness": {
+      "sigma_0.01": 286.1256119160053,
+      "sigma_0.05": 183.5329070505458,
+      "sigma_0.1": 157.2856301871569
+    },
+    "training_data_efficiency": {
+      "frac_0.05": {
+        "n_samples": 3525,
+        "rmse": 80.01606330922725
+      },
+      "frac_0.1": {
+        "n_samples": 7050,
+        "rmse": 78.96339303751374
+      },
+      "frac_0.25": {
+        "n_samples": 17627,
+        "rmse": 77.78289495440104
+      },
+      "frac_0.5": {
+        "n_samples": 35254,
+        "rmse": 76.92472871505997
+      },
+      "frac_1.0": {
+        "n_samples": 70508,
+        "rmse": 76.55896757201522
+      }
+    }
+  },
+  "quantile": {
+    "alpha": 0.9,
+    "best_params": {
+      "num_leaves": 900,
+      "max_depth": 5,
+      "subsample": 0.9,
+      "learning_rate": 0.05,
+      "min_child_samples": 500,
+      "n_estimators": 215
+    },
+    "train_time_sec": 4.779261586023495,
+    "val_metrics": {
+      "quantile_loss": 11.835501424491234,
+      "coverage": 0.8809912081678957
+    },
+    "test_metrics": {
+      "quantile_loss": 12.626330728013981,
+      "coverage": 0.8804412919367074
+    },
+    "test_metrics_train_quantile": {
+      "quantile_loss": 20.23592196709742,
+      "coverage": 0.8712100040367478
+    }
+  }
+}
