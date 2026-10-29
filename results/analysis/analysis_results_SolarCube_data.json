@@ -1,0 +1,1213 @@
+{
+  "task": "SolarCube",
+  "note": "counts of actual valid data (not availability flags); frame 0 = 2018-01-01 00:00 UTC, 15 min",
+  "stations": {
+    "1": {
+      "name": "bon",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34923,
+      "insitu_valid_fraction": 0.9966609589041096,
+      "insitu_valid_per_month": {
+        "Jan": 2971,
+        "Feb": 2688,
+        "Mar": 2976,
+        "Apr": 2873,
+        "May": 2976,
+        "Jun": 2880,
+        "Jul": 2955,
+        "Aug": 2976,
+        "Sep": 2871,
+        "Oct": 2939,
+        "Nov": 2880,
+        "Dec": 2938
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4961472602739726,
+        "visual_band_86": 0.4967180365296804,
+        "infrared_band_133": 0.9952625570776256,
+        "cloud_mask": 0.9440924657534246,
+        "solar_zenith_angle": 0.4987157534246575
+      },
+      "ssr_typical_valid_cells_of_900": 900.0,
+      "ssr_usable_frames": 34917,
+      "ssr_usable_fraction": 0.9964897260273973
+    },
+    "2": {
+      "name": "fpk",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34657,
+      "insitu_valid_fraction": 0.9890696347031963,
+      "insitu_valid_per_month": {
+        "Jan": 2938,
+        "Feb": 2433,
+        "Mar": 2924,
+        "Apr": 2880,
+        "May": 2976,
+        "Jun": 2880,
+        "Jul": 2976,
+        "Aug": 2976,
+        "Sep": 2847,
+        "Oct": 2973,
+        "Nov": 2880,
+        "Dec": 2974
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49483447488584476,
+        "visual_band_86": 0.4958904109589041,
+        "infrared_band_133": 0.9952054794520548,
+        "cloud_mask": 0.94375,
+        "solar_zenith_angle": 0.49920091324200916
+      },
+      "ssr_typical_valid_cells_of_900": 900.0,
+      "ssr_usable_frames": 34914,
+      "ssr_usable_fraction": 0.9964041095890411
+    },
+    "3": {
+      "name": "gwn",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34806,
+      "insitu_valid_fraction": 0.9933219178082192,
+      "insitu_valid_per_month": {
+        "Jan": 2966,
+        "Feb": 2682,
+        "Mar": 2976,
+        "Apr": 2880,
+        "May": 2976,
+        "Jun": 2858,
+        "Jul": 2939,
+        "Aug": 2950,
+        "Sep": 2867,
+        "Oct": 2894,
+        "Nov": 2843,
+        "Dec": 2975
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.496175799086758,
+        "visual_band_86": 0.4966324200913242,
+        "infrared_band_133": 0.9952054794520548,
+        "cloud_mask": 0.9442922374429223,
+        "solar_zenith_angle": 0.4978595890410959
+      },
+      "ssr_typical_valid_cells_of_900": 900.0,
+      "ssr_usable_frames": 34915,
+      "ssr_usable_fraction": 0.9964326484018264
+    },
+    "4": {
+      "name": "dra",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 35010,
+      "insitu_valid_fraction": 0.9991438356164384,
+      "insitu_valid_per_month": {
+        "Jan": 2976,
+        "Feb": 2688,
+        "Mar": 2946,
+        "Apr": 2880,
+        "May": 2976,
+        "Jun": 2880,
+        "Jul": 2976,
+        "Aug": 2976,
+        "Sep": 2880,
+        "Oct": 2976,
+        "Nov": 2880,
+        "Dec": 2976
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49534817351598176,
+        "visual_band_86": 0.4964326484018265,
+        "infrared_band_133": 0.9952625570776256,
+        "cloud_mask": 0.9440924657534246,
+        "solar_zenith_angle": 0.49845890410958904
+      },
+      "ssr_typical_valid_cells_of_900": 897.0,
+      "ssr_usable_frames": 34917,
+      "ssr_usable_fraction": 0.9964897260273973
+    },
+    "5": {
+      "name": "psu",
+      "is_test_station": true,
+      "n_frames": 35040,
+      "insitu_valid": 34960,
+      "insitu_valid_fraction": 0.997716894977169,
+      "insitu_valid_per_month": {
+        "Jan": 2953,
+        "Feb": 2688,
+        "Mar": 2976,
+        "Apr": 2880,
+        "May": 2976,
+        "Jun": 2880,
+        "Jul": 2962,
+        "Aug": 2976,
+        "Sep": 2837,
+        "Oct": 2976,
+        "Nov": 2880,
+        "Dec": 2976
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4959474885844749,
+        "visual_band_86": 0.4967180365296804,
+        "infrared_band_133": 0.9939783105022831,
+        "cloud_mask": 0.9443207762557078,
+        "solar_zenith_angle": 0.4982876712328767
+      },
+      "ssr_typical_valid_cells_of_900": 898.0,
+      "ssr_usable_frames": 34877,
+      "ssr_usable_fraction": 0.9953481735159817
+    },
+    "6": {
+      "name": "sxf",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34928,
+      "insitu_valid_fraction": 0.9968036529680365,
+      "insitu_valid_per_month": {
+        "Jan": 2963,
+        "Feb": 2679,
+        "Mar": 2976,
+        "Apr": 2841,
+        "May": 2976,
+        "Jun": 2880,
+        "Jul": 2976,
+        "Aug": 2971,
+        "Sep": 2860,
+        "Oct": 2976,
+        "Nov": 2880,
+        "Dec": 2950
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4955764840182648,
+        "visual_band_86": 0.49646118721461185,
+        "infrared_band_133": 0.9953196347031964,
+        "cloud_mask": 0.9436643835616438,
+        "solar_zenith_angle": 0.49868721461187215
+      },
+      "ssr_typical_valid_cells_of_900": 900.0,
+      "ssr_usable_frames": 34917,
+      "ssr_usable_fraction": 0.9964897260273973
+    },
+    "7": {
+      "name": "tbl",
+      "is_test_station": true,
+      "n_frames": 35040,
+      "insitu_valid": 34898,
+      "insitu_valid_fraction": 0.9959474885844749,
+      "insitu_valid_per_month": {
+        "Jan": 2976,
+        "Feb": 2613,
+        "Mar": 2976,
+        "Apr": 2878,
+        "May": 2976,
+        "Jun": 2842,
+        "Jul": 2976,
+        "Aug": 2976,
+        "Sep": 2880,
+        "Oct": 2976,
+        "Nov": 2877,
+        "Dec": 2952
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49560502283105023,
+        "visual_band_86": 0.49654680365296805,
+        "infrared_band_133": 0.9952625570776256,
+        "cloud_mask": 0.9441210045662101,
+        "solar_zenith_angle": 0.4983162100456621
+      },
+      "ssr_typical_valid_cells_of_900": 900.0,
+      "ssr_usable_frames": 34915,
+      "ssr_usable_fraction": 0.9964326484018264
+    },
+    "8": {
+      "name": "FLO",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 23370,
+      "insitu_valid_fraction": 0.6669520547945206,
+      "insitu_valid_per_month": {
+        "Jan": 2211,
+        "Feb": 1790,
+        "Mar": 1821,
+        "Apr": 1558,
+        "May": 1606,
+        "Jun": 1629,
+        "Jul": 0,
+        "Aug": 2910,
+        "Sep": 2842,
+        "Oct": 2949,
+        "Nov": 2415,
+        "Dec": 1639
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49369292237442924,
+        "visual_band_86": 0.49460616438356164,
+        "infrared_band_133": 0.996033105022831,
+        "cloud_mask": 0.943607305936073,
+        "solar_zenith_angle": 0.4962899543378995
+      },
+      "ssr_typical_valid_cells_of_900": 820.0,
+      "ssr_usable_frames": 34918,
+      "ssr_usable_fraction": 0.9965182648401827
+    },
+    "9": {
+      "name": "LRC",
+      "is_test_station": true,
+      "n_frames": 35040,
+      "insitu_valid": 34462,
+      "insitu_valid_fraction": 0.9835045662100457,
+      "insitu_valid_per_month": {
+        "Jan": 2949,
+        "Feb": 2651,
+        "Mar": 2965,
+        "Apr": 2827,
+        "May": 2872,
+        "Jun": 2852,
+        "Jul": 2868,
+        "Aug": 2929,
+        "Sep": 2855,
+        "Oct": 2926,
+        "Nov": 2841,
+        "Dec": 2927
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49668949771689497,
+        "visual_band_86": 0.49731735159817353,
+        "infrared_band_133": 0.996175799086758,
+        "cloud_mask": 0.9443207762557078,
+        "solar_zenith_angle": 0.4985159817351598
+      },
+      "ssr_typical_valid_cells_of_900": 562.0,
+      "ssr_usable_frames": 34918,
+      "ssr_usable_fraction": 0.9965182648401827
+    },
+    "10": {
+      "name": "ASP",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34161,
+      "insitu_valid_fraction": 0.9749143835616438,
+      "insitu_valid_per_month": {
+        "Jan": 2961,
+        "Feb": 2688,
+        "Mar": 2370,
+        "Apr": 2880,
+        "May": 2976,
+        "Jun": 2880,
+        "Jul": 2975,
+        "Aug": 2974,
+        "Sep": 2868,
+        "Oct": 2964,
+        "Nov": 2841,
+        "Dec": 2784
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4987728310502283,
+        "visual_band_86": 0.49460616438356164,
+        "infrared_band_133": 0.9945776255707762,
+        "cloud_mask": 0.972716894977169,
+        "solar_zenith_angle": 0.4970890410958904
+      },
+      "ssr_typical_valid_cells_of_900": 900.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "11": {
+      "name": "COC",
+      "is_test_station": true,
+      "n_frames": 35040,
+      "insitu_valid": 34821,
+      "insitu_valid_fraction": 0.99375,
+      "insitu_valid_per_month": {
+        "Jan": 2976,
+        "Feb": 2688,
+        "Mar": 2976,
+        "Apr": 2880,
+        "May": 2964,
+        "Jun": 2722,
+        "Jul": 2976,
+        "Aug": 2976,
+        "Sep": 2831,
+        "Oct": 2976,
+        "Nov": 2880,
+        "Dec": 2976
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4972888127853881,
+        "visual_band_86": 0.4939212328767123,
+        "infrared_band_133": 0.9938641552511416,
+        "cloud_mask": 0.9720890410958904,
+        "solar_zenith_angle": 0.497203196347032
+      },
+      "ssr_typical_valid_cells_of_900": 2.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "12": {
+      "name": "DWN",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34611,
+      "insitu_valid_fraction": 0.9877568493150685,
+      "insitu_valid_per_month": {
+        "Jan": 2976,
+        "Feb": 2686,
+        "Mar": 2878,
+        "Apr": 2880,
+        "May": 2971,
+        "Jun": 2880,
+        "Jul": 2967,
+        "Aug": 2960,
+        "Sep": 2863,
+        "Oct": 2976,
+        "Nov": 2625,
+        "Dec": 2949
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4985445205479452,
+        "visual_band_86": 0.49731735159817353,
+        "infrared_band_133": 0.9945776255707762,
+        "cloud_mask": 0.9721175799086758,
+        "solar_zenith_angle": 0.49991438356164386
+      },
+      "ssr_typical_valid_cells_of_900": 683.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "13": {
+      "name": "FUA",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34977,
+      "insitu_valid_fraction": 0.9982020547945205,
+      "insitu_valid_per_month": {
+        "Jan": 2974,
+        "Feb": 2687,
+        "Mar": 2974,
+        "Apr": 2876,
+        "May": 2971,
+        "Jun": 2877,
+        "Jul": 2973,
+        "Aug": 2976,
+        "Sep": 2870,
+        "Oct": 2973,
+        "Nov": 2876,
+        "Dec": 2950
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49997146118721464,
+        "visual_band_86": 0.49860159817351596,
+        "infrared_band_133": 0.9942351598173516,
+        "cloud_mask": 0.972574200913242,
+        "solar_zenith_angle": 0.5014269406392694
+      },
+      "ssr_typical_valid_cells_of_900": 380.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "14": {
+      "name": "HOW",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 13391,
+      "insitu_valid_fraction": 0.38216324200913243,
+      "insitu_valid_per_month": {
+        "Jan": 1985,
+        "Feb": 0,
+        "Mar": 0,
+        "Apr": 0,
+        "May": 0,
+        "Jun": 0,
+        "Jul": 0,
+        "Aug": 0,
+        "Sep": 2874,
+        "Oct": 2975,
+        "Nov": 2880,
+        "Dec": 2677
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49774543378995434,
+        "visual_band_86": 0.4946917808219178,
+        "infrared_band_133": 0.9935787671232876,
+        "cloud_mask": 0.9714611872146118,
+        "solar_zenith_angle": 0.49968607305936075
+      },
+      "ssr_typical_valid_cells_of_900": 538.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "15": {
+      "name": "ISH",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34805,
+      "insitu_valid_fraction": 0.9932933789954338,
+      "insitu_valid_per_month": {
+        "Jan": 2956,
+        "Feb": 2682,
+        "Mar": 2967,
+        "Apr": 2857,
+        "May": 2968,
+        "Jun": 2872,
+        "Jul": 2972,
+        "Aug": 2975,
+        "Sep": 2874,
+        "Oct": 2966,
+        "Nov": 2751,
+        "Dec": 2965
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49917237442922374,
+        "visual_band_86": 0.49677511415525116,
+        "infrared_band_133": 0.9914383561643836,
+        "cloud_mask": 0.9725456621004567,
+        "solar_zenith_angle": 0.5013413242009133
+      },
+      "ssr_typical_valid_cells_of_900": 209.0,
+      "ssr_usable_frames": 34748,
+      "ssr_usable_fraction": 0.9916666666666667
+    },
+    "16": {
+      "name": "LAU",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34847,
+      "insitu_valid_fraction": 0.9944920091324201,
+      "insitu_valid_per_month": {
+        "Jan": 2976,
+        "Feb": 2688,
+        "Mar": 2976,
+        "Apr": 2870,
+        "May": 2870,
+        "Jun": 2877,
+        "Jul": 2976,
+        "Aug": 2976,
+        "Sep": 2865,
+        "Oct": 2967,
+        "Nov": 2878,
+        "Dec": 2928
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4930365296803653,
+        "visual_band_86": 0.4920947488584475,
+        "infrared_band_133": 0.9936643835616439,
+        "cloud_mask": 0.972203196347032,
+        "solar_zenith_angle": 0.4968607305936073
+      },
+      "ssr_typical_valid_cells_of_900": 369.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "17": {
+      "name": "NEW",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 7006,
+      "insitu_valid_fraction": 0.19994292237442923,
+      "insitu_valid_per_month": {
+        "Jan": 2817,
+        "Feb": 1376,
+        "Mar": 2813,
+        "Apr": 0,
+        "May": 0,
+        "Jun": 0,
+        "Jul": 0,
+        "Aug": 0,
+        "Sep": 0,
+        "Oct": 0,
+        "Nov": 0,
+        "Dec": 0
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4970890410958904,
+        "visual_band_86": 0.4939212328767123,
+        "infrared_band_133": 0.994263698630137,
+        "cloud_mask": 0.9725171232876713,
+        "solar_zenith_angle": 0.4967180365296804
+      },
+      "ssr_typical_valid_cells_of_900": 301.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "18": {
+      "name": "SAP",
+      "is_test_station": true,
+      "n_frames": 35040,
+      "insitu_valid": 34916,
+      "insitu_valid_fraction": 0.9964611872146119,
+      "insitu_valid_per_month": {
+        "Jan": 2970,
+        "Feb": 2684,
+        "Mar": 2971,
+        "Apr": 2860,
+        "May": 2956,
+        "Jun": 2861,
+        "Jul": 2970,
+        "Aug": 2964,
+        "Sep": 2869,
+        "Oct": 2971,
+        "Nov": 2871,
+        "Dec": 2969
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.4987728310502283,
+        "visual_band_86": 0.49817351598173515,
+        "infrared_band_133": 0.9942351598173516,
+        "cloud_mask": 0.9724600456621004,
+        "solar_zenith_angle": 0.5015696347031964
+      },
+      "ssr_typical_valid_cells_of_900": 341.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    },
+    "19": {
+      "name": "TAT",
+      "is_test_station": false,
+      "n_frames": 35040,
+      "insitu_valid": 34998,
+      "insitu_valid_fraction": 0.9988013698630137,
+      "insitu_valid_per_month": {
+        "Jan": 2976,
+        "Feb": 2683,
+        "Mar": 2972,
+        "Apr": 2879,
+        "May": 2964,
+        "Jun": 2873,
+        "Jul": 2975,
+        "Aug": 2973,
+        "Sep": 2879,
+        "Oct": 2971,
+        "Nov": 2878,
+        "Dec": 2975
+      },
+      "satellite_valid_fraction_at_station_pixel": {
+        "visual_band_47": 0.49991438356164386,
+        "visual_band_86": 0.49774543378995434,
+        "infrared_band_133": 0.9944634703196347,
+        "cloud_mask": 0.9726027397260274,
+        "solar_zenith_angle": 0.5007705479452055
+      },
+      "ssr_typical_valid_cells_of_900": 347.0,
+      "ssr_usable_frames": 34857,
+      "ssr_usable_fraction": 0.9947773972602739
+    }
+  },
+  "totals": {
+    "frames": 665760,
+    "insitu_valid": 600547,
+    "ssr_frames_with_data": 662669
+  },
+  "subtasks": {
+    "odd_space_point": {
+      "train": {
+        "stations": [
+          1,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          19
+        ],
+        "months": "all",
+        "n_windows": 14211,
+        "windows_per_station": {
+          "1": 1433,
+          "3": 1445,
+          "4": 1445,
+          "6": 1445,
+          "8": 478,
+          "10": 1397,
+          "12": 1417,
+          "13": 1453,
+          "14": 540,
+          "16": 1434,
+          "17": 271,
+          "19": 1453
+        }
+      },
+      "val": {
+        "stations": [
+          2,
+          15
+        ],
+        "months": "all",
+        "n_windows": 2864,
+        "windows_per_station": {
+          "2": 1427,
+          "15": 1437
+        }
+      },
+      "test": {
+        "stations": [
+          5,
+          7,
+          9,
+          11,
+          18
+        ],
+        "months": "all",
+        "n_windows": 7199,
+        "windows_per_station": {
+          "5": 1445,
+          "7": 1437,
+          "9": 1434,
+          "11": 1430,
+          "18": 1453
+        }
+      }
+    },
+    "odd_space_area": {
+      "train": {
+        "stations": [
+          1,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          19
+        ],
+        "months": "all",
+        "n_windows": 17329,
+        "windows_per_station": {
+          "1": 1447,
+          "3": 1447,
+          "4": 1447,
+          "6": 1447,
+          "8": 1447,
+          "10": 1442,
+          "12": 1442,
+          "13": 1442,
+          "14": 1442,
+          "16": 1442,
+          "17": 1442,
+          "19": 1442
+        }
+      },
+      "val": {
+        "stations": [
+          2,
+          15
+        ],
+        "months": "all",
+        "n_windows": 2877,
+        "windows_per_station": {
+          "2": 1447,
+          "15": 1430
+        }
+      },
+      "test": {
+        "stations": [
+          5,
+          7,
+          9,
+          11,
+          18
+        ],
+        "months": "all",
+        "n_windows": 7218,
+        "windows_per_station": {
+          "5": 1440,
+          "7": 1447,
+          "9": 1447,
+          "11": 1442,
+          "18": 1442
+        }
+      }
+    },
+    "odd_time_point": {
+      "train": {
+        "stations": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "months": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          12
+        ],
+        "n_windows": 11713,
+        "windows_per_station": {
+          "1": 689,
+          "2": 693,
+          "3": 701,
+          "4": 693,
+          "5": 693,
+          "6": 701,
+          "7": 693,
+          "8": 138,
+          "9": 693,
+          "10": 651,
+          "11": 678,
+          "12": 685,
+          "13": 701,
+          "14": 289,
+          "15": 701,
+          "16": 699,
+          "17": 213,
+          "18": 701,
+          "19": 701
+        }
+      },
+      "val": {
+        "stations": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "months": [
+          4,
+          10
+        ],
+        "n_windows": 3898,
+        "windows_per_station": {
+          "1": 222,
+          "2": 230,
+          "3": 230,
+          "4": 230,
+          "5": 230,
+          "6": 222,
+          "7": 230,
+          "8": 117,
+          "9": 230,
+          "10": 230,
+          "11": 230,
+          "12": 230,
+          "13": 230,
+          "14": 117,
+          "15": 230,
+          "16": 230,
+          "18": 230,
+          "19": 230
+        }
+      },
+      "test": {
+        "stations": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "months": [
+          2,
+          5,
+          8,
+          11
+        ],
+        "n_windows": 7497,
+        "windows_per_station": {
+          "1": 452,
+          "2": 437,
+          "3": 444,
+          "4": 452,
+          "5": 452,
+          "6": 452,
+          "7": 444,
+          "8": 202,
+          "9": 441,
+          "10": 446,
+          "11": 452,
+          "12": 432,
+          "13": 452,
+          "14": 113,
+          "15": 436,
+          "16": 442,
+          "17": 44,
+          "18": 452,
+          "19": 452
+        }
+      }
+    },
+    "odd_time_area": {
+      "train": {
+        "stations": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "months": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          12
+        ],
+        "n_windows": 13258,
+        "windows_per_station": {
+          "1": 695,
+          "2": 695,
+          "3": 695,
+          "4": 695,
+          "5": 688,
+          "6": 695,
+          "7": 695,
+          "8": 695,
+          "9": 695,
+          "10": 701,
+          "11": 701,
+          "12": 701,
+          "13": 701,
+          "14": 701,
+          "15": 701,
+          "16": 701,
+          "17": 701,
+          "18": 701,
+          "19": 701
+        }
+      },
+      "val": {
+        "stations": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "months": [
+          4,
+          10
+        ],
+        "n_windows": 4370,
+        "windows_per_station": {
+          "1": 230,
+          "2": 230,
+          "3": 230,
+          "4": 230,
+          "5": 230,
+          "6": 230,
+          "7": 230,
+          "8": 230,
+          "9": 230,
+          "10": 230,
+          "11": 230,
+          "12": 230,
+          "13": 230,
+          "14": 230,
+          "15": 230,
+          "16": 230,
+          "17": 230,
+          "18": 230,
+          "19": 230
+        }
+      },
+      "test": {
+        "stations": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "months": [
+          2,
+          5,
+          8,
+          11
+        ],
+        "n_windows": 8466,
+        "windows_per_station": {
+          "1": 452,
+          "2": 452,
+          "3": 452,
+          "4": 452,
+          "5": 452,
+          "6": 452,
+          "7": 452,
+          "8": 452,
+          "9": 452,
+          "10": 441,
+          "11": 441,
+          "12": 441,
+          "13": 441,
+          "14": 441,
+          "15": 429,
+          "16": 441,
+          "17": 441,
+          "18": 441,
+          "19": 441
+        }
+      }
+    },
+    "odd_spacetime_point": {
+      "train": {
+        "stations": [
+          1,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          19
+        ],
+        "months": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          12
+        ],
+        "n_windows": 6861,
+        "windows_per_station": {
+          "1": 689,
+          "3": 701,
+          "4": 693,
+          "6": 701,
+          "8": 138,
+          "10": 651,
+          "12": 685,
+          "13": 701,
+          "14": 289,
+          "16": 699,
+          "17": 213,
+          "19": 701
+        }
+      },
+      "val": {
+        "stations": [
+          2,
+          15
+        ],
+        "months": [
+          4,
+          10
+        ],
+        "n_windows": 460,
+        "windows_per_station": {
+          "2": 230,
+          "15": 230
+        }
+      },
+      "test": {
+        "stations": [
+          5,
+          7,
+          9,
+          11,
+          18
+        ],
+        "months": [
+          2,
+          5,
+          8,
+          11
+        ],
+        "n_windows": 2241,
+        "windows_per_station": {
+          "5": 452,
+          "7": 444,
+          "9": 441,
+          "11": 452,
+          "18": 452
+        }
+      }
+    },
+    "odd_spacetime_area": {
+      "train": {
+        "stations": [
+          1,
+          3,
+          4,
+          6,
+          8,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          19
+        ],
+        "months": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          12
+        ],
+        "n_windows": 8382,
+        "windows_per_station": {
+          "1": 695,
+          "3": 695,
+          "4": 695,
+          "6": 695,
+          "8": 695,
+          "10": 701,
+          "12": 701,
+          "13": 701,
+          "14": 701,
+          "16": 701,
+          "17": 701,
+          "19": 701
+        }
+      },
+      "val": {
+        "stations": [
+          2,
+          15
+        ],
+        "months": [
+          4,
+          10
+        ],
+        "n_windows": 460,
+        "windows_per_station": {
+          "2": 230,
+          "15": 230
+        }
+      },
+      "test": {
+        "stations": [
+          5,
+          7,
+          9,
+          11,
+          18
+        ],
+        "months": [
+          2,
+          5,
+          8,
+          11
+        ],
+        "n_windows": 2238,
+        "windows_per_station": {
+          "5": 452,
+          "7": 452,
+          "9": 452,
+          "11": 441,
+          "18": 441
+        }
+      }
+    }
+  },
+  "first_pass_flag_totals": {
+    "n_stations": 19,
+    "n_stations_train": 14,
+    "n_stations_test": 5,
+    "n_timesteps_per_station": 35040,
+    "n_datapoints_total_rows": 665760,
+    "n_datapoints_all_modalities_available": 240776,
+    "modality_availability_counts": {
+      "vis047": 314608,
+      "vis086": 309920,
+      "ir133": 662258,
+      "ssr": 269940,
+      "sza": 316351,
+      "insitu": 283546
+    }
+  }
+}

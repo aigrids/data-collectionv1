@@ -17,6 +17,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
+import solarcube_splits as sp
+
 HIST = 96
 HORIZON = 96
 SENTINEL = -9999
@@ -61,11 +63,15 @@ def valid_mask(X):
     return v
 
 
-def compute_norm_stats(stations, ids, step=7):
+def compute_norm_stats(stations, ids, step=7, months=None):
     """Per-channel mean/std over valid entries of the training stations (subsampled in time)."""
     s1 = np.zeros(len(CHANNELS)); s2 = np.zeros(len(CHANNELS)); n = np.zeros(len(CHANNELS))
     for sid in ids:
-        X = stations[sid]["X"][::step]
+        X = stations[sid]["X"]
+        sel = np.arange(0, len(X), step)
+        if months is not None:
+            sel = sel[sp.frame_mask(months, len(X))[sel]]
+        X = X[sel]
         v = valid_mask(X)
         for c in range(len(CHANNELS)):
             xs = X[:, c][v[:, c]].astype(np.float64)

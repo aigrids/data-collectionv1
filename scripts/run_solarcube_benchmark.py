@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import solarcube_benchmark as sb  # noqa: E402
 import solarcube_data as sd  # noqa: E402
+import solarcube_splits as sp  # noqa: E402
 import solarcube_table2 as t2  # noqa: E402
 from solarcube_models import SolarForecaster  # noqa: E402
 
@@ -28,7 +29,8 @@ from solarcube_models import SolarForecaster  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", required=True)
-    ap.add_argument("--subtask", default="odd_space_point", choices=["odd_space_point"])
+    ap.add_argument("--subtask", default="odd_space_point",
+                    choices=["odd_space_point", "odd_time_point", "odd_spacetime_point"])
     ap.add_argument("--epochs", type=int, default=15)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--batch-size", type=int, default=64)
@@ -46,13 +48,20 @@ def main():
     torch.manual_seed(a.seed); np.random.seed(a.seed)
     stations = sd.load_cache(os.path.expanduser(a.cache))
     val_ids = tuple(int(s) for s in a.val_stations.split(","))
-    train_ids, val_ids, test_ids = sd.space_split(stations, val_ids)
-    print(f"device {device} | train {train_ids} | val {val_ids} | test {test_ids}", flush=True)
+    _, val_ids, test_ids = sd.space_split(stations, val_ids)
+    kind = a.subtask.split("_")[1]                      # space | time | spacetime
+    pl = sp.plan(kind, list(stations), test_ids, val_ids)
+    (train_ids, train_m), (val_ids, val_m), (test_ids, test_m) = pl["train"], pl["val"], pl["test"]
+    print(f"device {device} | split {kind} | train {train_ids} {train_m} | val {val_ids} {val_m} | "
+          f"test {test_ids} {test_m}", flush=True)
 
-    mean, std = sd.compute_norm_stats(stations, train_ids)
-    train_ds = sd.SolarForecastDataset(stations, train_ids, mean, std, stride=a.stride_train)
-    val_ds = sd.SolarForecastDataset(stations, val_ids, mean, std, stride=a.stride_eval)
-    test_ds = sd.SolarForecastDataset(stations, test_ids, mean, std, stride=a.stride_eval)
+    mean, std = sd.compute_norm_stats(stations, train_ids, months=train_m)
+    train_ds = sp.restrict_windows(sd.SolarForecastDataset(stations, train_ids, mean, std, stride=a.stride_train),
+                                   stations, train_m)
+    val_ds = sp.restrict_windows(sd.SolarForecastDataset(stations, val_ids, mean, std, stride=a.stride_eval),
+                                 stations, val_m)
+    test_ds = sp.restrict_windows(sd.SolarForecastDataset(stations, test_ids, mean, std, stride=a.stride_eval),
+                                  stations, test_m)
     print(f"windows: train {len(train_ds)} | val {len(val_ds)} | test {len(test_ds)}", flush=True)
 
     def make_model():
@@ -67,14 +76,15 @@ def main():
 
     test_loader = torch.utils.data.DataLoader(test_ds, batch_size=256, shuffle=False)
     test_res, _ = sb.evaluate(model, test_loader, device)
-    print("\nTEST (unseen stations):")
+    print(f"\nTEST (held-out {kind}):")
     print(f"  model          MAE {test_res['model']['mae']:.1f}  RMSE {test_res['model']['rmse']:.1f}  W/m^2")
     print(f"  persistence24h MAE {test_res['persistence_24h']['mae']:.1f}  RMSE {test_res['persistence_24h']['rmse']:.1f}  W/m^2", flush=True)
 
     results = {
         "task_name": "SolarCube", "subtask": a.subtask,
         "config": {**vars(a), "n_params": n_params, "device": str(device)},
-        "split": {"train_stations": train_ids, "val_stations": val_ids, "test_stations": test_ids},
+        "split": {"kind": kind, "train_stations": train_ids, "val_stations": val_ids, "test_stations": test_ids,
+                  "months": {"train": train_m, "val": val_m, "test": test_m}},
         "n_windows": {"train": len(train_ds), "val": len(val_ds), "test": len(test_ds)},
         "training_seconds": train_time, "history": history, "test": test_res,
     }
