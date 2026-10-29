@@ -21,6 +21,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, Subset
 
+import solarcube_splits as sp
+
 HIST = 96
 HORIZON = 96
 N_HOURS = 24
@@ -57,11 +59,15 @@ def load_cache(cache_dir, station_ids=None):
     return stations
 
 
-def compute_norm_stats(stations, ids, step=97):
+def compute_norm_stats(stations, ids, step=97, months=None):
     """Mean/std of the 5 satellite channels over valid cells of the training stations."""
     s1, s2, n = np.zeros(N_OTHER), np.zeros(N_OTHER), np.zeros(N_OTHER)
     for sid in ids:
-        g = np.asarray(stations[sid]["G"][::step, :N_OTHER])
+        G = stations[sid]["G"]
+        sel = np.arange(0, G.shape[0], step)
+        if months is not None:
+            sel = sel[sp.frame_mask(months, G.shape[0])[sel]]
+        g = np.asarray(G[sel, :N_OTHER])
         for c in range(N_OTHER):
             xs = g[:, c][g[:, c] != SENTINEL].astype(np.float64)
             s1[c] += xs.sum(); s2[c] += (xs ** 2).sum(); n[c] += xs.size

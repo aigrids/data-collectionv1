@@ -19,12 +19,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 
 import solarcube_area as sa  # noqa: E402
 import solarcube_data as sd  # noqa: E402  (only for space_split)
+import solarcube_splits as sp  # noqa: E402
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", required=True)
-    ap.add_argument("--subtask", default="odd_space_area", choices=["odd_space_area"])
+    ap.add_argument("--subtask", default="odd_space_area",
+                    choices=["odd_space_area", "odd_time_area", "odd_spacetime_area"])
     ap.add_argument("--epochs", type=int, default=15)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--batch-size", type=int, default=32)
@@ -44,9 +46,12 @@ def main():
     torch.manual_seed(a.seed); np.random.seed(a.seed)
     stations = sa.load_cache(os.path.expanduser(a.cache))
     val_ids = tuple(int(s) for s in a.val_stations.split(","))
-    train_ids, val_ids, test_ids = sd.space_split(stations, val_ids)
-    print(f"device {device} | threads {torch.get_num_threads()} | train {train_ids} | val {val_ids} | test {test_ids}",
-          flush=True)
+    _, val_ids, test_ids = sd.space_split(stations, val_ids)
+    kind = a.subtask.split("_")[1]                      # space | time | spacetime
+    pl = sp.plan(kind, list(stations), test_ids, val_ids)
+    (train_ids, train_m), (val_ids, val_m), (test_ids, test_m) = pl["train"], pl["val"], pl["test"]
+    print(f"device {device} | threads {torch.get_num_threads()} | split {kind} | train {train_ids} {train_m} | "
+          f"val {val_ids} {val_m} | test {test_ids} {test_m}", flush=True)
     slopes = {sid: stations[sid]["meta"].get("ssr_slope_wm2_per_raw_unit") for sid in stations}
     print("ssr -> W/m^2 slope per station (assumed %.3f): %s" % (
         sa.SSR_RAW_TO_WM2, {k: (round(v, 4) if v else v) for k, v in slopes.items()}), flush=True)
@@ -55,10 +60,13 @@ def main():
         raise SystemExit(f"ssr->W/m^2 slope far from the assumed {sa.SSR_RAW_TO_WM2}: {bad}. "
                          "Check SSR_RAW_TO_WM2 in src/solarcube_area.py before training.")
 
-    mean, std = sa.compute_norm_stats(stations, train_ids)
-    train_ds = sa.SolarAreaDataset(stations, train_ids, mean, std, stride=a.stride_train)
-    val_ds = sa.SolarAreaDataset(stations, val_ids, mean, std, stride=a.stride_eval)
-    test_ds = sa.SolarAreaDataset(stations, test_ids, mean, std, stride=a.stride_eval)
+    mean, std = sa.compute_norm_stats(stations, train_ids, months=train_m)
+    train_ds = sp.restrict_windows(sa.SolarAreaDataset(stations, train_ids, mean, std, stride=a.stride_train),
+                                   stations, train_m)
+    val_ds = sp.restrict_windows(sa.SolarAreaDataset(stations, val_ids, mean, std, stride=a.stride_eval),
+                                 stations, val_m)
+    test_ds = sp.restrict_windows(sa.SolarAreaDataset(stations, test_ids, mean, std, stride=a.stride_eval),
+                                  stations, test_m)
     n_by = {name: {} for name in ("train", "val", "test")}
     for name, ds in (("train", train_ds), ("val", val_ds), ("test", test_ds)):
         for sid, _ in ds.index:
@@ -85,7 +93,7 @@ def main():
     train_time = time.time() - t0
 
     test_res = sa.evaluate(model, torch.utils.data.DataLoader(test_ds, batch_size=64, shuffle=False), device)
-    print("\nTEST (unseen stations):")
+    print(f"\nTEST (held-out {kind}):")
     print(f"  model          MAE {test_res['model']['mae']:.1f}  RMSE {test_res['model']['rmse']:.1f}  W/m^2")
     print(f"  persistence24h MAE {test_res['persistence_24h']['mae']:.1f}  "
           f"RMSE {test_res['persistence_24h']['rmse']:.1f}  W/m^2", flush=True)
@@ -94,7 +102,8 @@ def main():
         "task_name": "SolarCube", "subtask": a.subtask,
         "config": {**vars(a), "n_params": n_params, "device": str(device), "grid": 30, "pool": 4,
                    "ssr_raw_to_wm2_assumed": sa.SSR_RAW_TO_WM2, "ssr_slopes_vs_ground": slopes},
-        "split": {"train_stations": train_ids, "val_stations": val_ids, "test_stations": test_ids},
+        "split": {"kind": kind, "train_stations": train_ids, "val_stations": val_ids, "test_stations": test_ids,
+                  "months": {"train": train_m, "val": val_m, "test": test_m}},
         "n_windows": {"train": len(train_ds), "val": len(val_ds), "test": len(test_ds)},
         "training_seconds": train_time, "history": history, "test": test_res,
     }
